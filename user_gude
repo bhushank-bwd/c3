@@ -1,0 +1,74 @@
+1: Dowonload Codeigniter 4 and place it into htdocs
+----------------------------------------------------------------------------
+2: 	Remove index.php in URL
+
+	2:1 Create .htaccess in root folder
+
+		RewriteEngine on
+		RewriteCond %{REQUEST_FILENAME} !-f
+		RewriteCond %{REQUEST_FILENAME} !-d
+		RewriteRule .* index.php/$0 [PT,L]
+
+	2.2: Place Below Code in application/config/config.php
+
+		$base_url = ((isset($_SERVER['HTTPS']) && $_SERVER['HTTPS'] == "on") ? "https" : "http");
+		$base_url .= "://". @$_SERVER['HTTP_HOST'];
+		$base_url .=     str_replace(basename($_SERVER['SCRIPT_NAME']),"",$_SERVER['SCRIPT_NAME']);
+		$config['base_url'] = $base_url;
+		$config['index_page'] = '';
+
+
+----------------------------------------------------------------------------
+
+3: Set Envoirnment 
+
+	3.1: Place code in index.php
+
+		switch($_SERVER["HTTP_HOST"]){
+			case "localhost":
+				define('ENVIRONMENT', 'development');
+			break;
+			case "localhost:8080":
+				define('ENVIRONMENT', 'development');
+			break;
+			default:
+				define('ENVIRONMENT', 'production');
+			break;
+		}
+
+	3:2  Place code in index.php
+
+		switch (ENVIRONMENT)
+		{
+			case 'development':
+				error_reporting(-1);
+				ini_set('display_errors', 1);
+			break;
+			case 'testing':
+			case 'production':
+				ini_set('display_errors', 0);
+				if (version_compare(PHP_VERSION, '5.3', '>='))
+				{
+					error_reporting(E_ALL & ~E_NOTICE & ~E_DEPRECATED & ~E_STRICT & ~E_USER_NOTICE & ~E_USER_DEPRECATED);
+				}
+				else
+				{
+					error_reporting(E_ALL & ~E_NOTICE & ~E_STRICT & ~E_USER_NOTICE);
+				}
+			break;
+			default:
+				header('HTTP/1.1 503 Service Unavailable.', TRUE, 503);
+				echo 'The application environment is not set correctly.';
+			exit(1); // EXIT_ERROR
+		}
+
+----------------------------------------------------------------------------
+
+4: Set Autoload 
+
+	$autoload['libraries'] = array("database",'session');
+	$autoload['helper'] = array('form','url','html');
+
+----------------------------------------------------------------------------
+
+
