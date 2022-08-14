@@ -71,4 +71,15 @@
 
 ----------------------------------------------------------------------------
 
+5: Set HMVC 
+
+	5.1: Place MX Folder in third_party
+	5.2: Place 3 My_ Files in core
+	5.3: Create modules in application
+	5.4: create db folder with controllers ,models,views subdirectory in modules
+	5.4: configure datatbase
+	5.5: create DB Controller 
+	5.6: Add db_model
+	5.7: addd routes
+
 
